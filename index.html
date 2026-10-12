@@ -10,21 +10,265 @@
 
 <body>
     <div class="container">
+
         <header>
             <h1>Study Task Tracker</h1>
             <p>Plan your work. Focus on your goals.</p>
         </header>
 
+        <!-- Study Dashboard -->
+        <section class="dashboard-section">
+            <div class="dashboard-heading">
+                <div>
+                    <h2>Today's Study Dashboard</h2>
+                    <p class="dashboard-subtitle">A small step every day adds up.</p>
+                </div>
+
+                <div class="goal-control">
+                    <label for="dailyGoal">Daily goal (minutes)</label>
+                    <input type="number" id="dailyGoal" min="1" max="1440" value="120">
+                    <button type="button" id="saveGoalButton">Set Goal</button>
+                </div>
+            </div>
+
+            <div class="dashboard-cards">
+                <article class="stat-card">
+                    <span class="stat-icon">🎯</span>
+                    <p>Daily goal</p>
+                    <h3 id="goalDisplay">120 min</h3>
+                </article>
+
+                <article class="stat-card">
+                    <span class="stat-icon">⏱️</span>
+                    <p>Focused today</p>
+                    <h3 id="focusTimeDisplay">0 min</h3>
+                </article>
+
+                <article class="stat-card">
+                    <span class="stat-icon">✅</span>
+                    <p>Tasks completed</p>
+                    <h3 id="dashboardCompleted">0 / 0</h3>
+                </article>
+
+                <article class="stat-card">
+                    <span class="stat-icon">📌</span>
+                    <p>Tasks pending</p>
+                    <h3 id="dashboardPending">0</h3>
+                </article>
+            </div>
+
+            <div class="goal-progress">
+                <div class="progress-labels">
+                    <span>Daily focus progress</span>
+                    <strong id="goalProgressText">0%</strong>
+                </div>
+
+                <div class="progress-track" role="progressbar"
+                     aria-label="Daily study goal progress"
+                     aria-valuemin="0" aria-valuemax="100"
+                     aria-valuenow="0" id="goalProgressBar">
+                    <div id="goalProgressFill"></div>
+                </div>
+
+                <p id="goalMessage">Start a focus session to make progress toward your goal.</p>
+            </div>
+        </section>
+
+        <!-- Study Achievements -->
+        <section class="achievements-section">
+            <div class="achievements-heading">
+                <div>
+                    <h2>🏆 Study Achievements</h2>
+                    <p class="achievements-subtitle">
+                        Build your streak, earn XP, and celebrate your progress!
+                    </p>
+                </div>
+            </div>
+
+            <div class="achievement-stats">
+                <article class="achievement-card streak-card">
+                    <span class="achievement-icon">🔥</span>
+                    <p>Current Streak</p>
+                    <h3><span id="currentStreak">0</span> <small>days</small></h3>
+                    <p class="achievement-note">Keep showing up every day!</p>
+                </article>
+
+                <article class="achievement-card">
+                    <span class="achievement-icon">🌟</span>
+                    <p>Best Streak</p>
+                    <h3><span id="bestStreak">0</span> <small>days</small></h3>
+                    <p class="achievement-note">Your personal record</p>
+                </article>
+
+                <article class="achievement-card xp-card">
+                    <span class="achievement-icon">⚡</span>
+                    <p>Total XP</p>
+                    <h3 id="totalXP">0 XP</h3>
+                    <p class="achievement-note">Every effort counts</p>
+                </article>
+
+                <article class="achievement-card level-card">
+                    <span class="achievement-icon">🎖️</span>
+                    <p>Study Level</p>
+                    <h3 id="studyLevel">Level 1</h3>
+                    <p class="achievement-note" id="levelMessage">Your journey starts here!</p>
+                </article>
+            </div>
+
+            <div class="xp-progress-section">
+                <div class="progress-labels">
+                    <span>Progress to next level</span>
+                    <strong id="xpProgressText">0 / 100 XP</strong>
+                </div>
+
+                <div class="progress-track" role="progressbar"
+                     aria-label="Progress to next study level"
+                     aria-valuemin="0" aria-valuemax="100"
+                     aria-valuenow="0" id="xpProgressBar">
+                    <div id="xpProgressFill"></div>
+                </div>
+            </div>
+
+            <div class="badges-section">
+                <h3>🎯 Achievement Badges</h3>
+                <p class="achievement-note">Unlock badges as you reach new milestones.</p>
+
+                <div class="badges-grid" id="badgesGrid">
+                    <article class="badge-card locked" id="badgeFirstTask">
+                        <span class="badge-icon">📘</span>
+                        <h4>First Step</h4>
+                        <p>Complete your first study task.</p>
+                        <span class="badge-status">Locked</span>
+                    </article>
+
+                    <article class="badge-card locked" id="badgeFiveTasks">
+                        <span class="badge-icon">📚</span>
+                        <h4>Bookworm</h4>
+                        <p>Complete 5 study tasks.</p>
+                        <span class="badge-status">Locked</span>
+                    </article>
+
+                    <article class="badge-card locked" id="badgeTenTasks">
+                        <span class="badge-icon">🏅</span>
+                        <h4>Task Champion</h4>
+                        <p>Complete 10 study tasks.</p>
+                        <span class="badge-status">Locked</span>
+                    </article>
+
+                    <article class="badge-card locked" id="badgeThreeDayStreak">
+                        <span class="badge-icon">🔥</span>
+                        <h4>On Fire</h4>
+                        <p>Study for 3 consecutive days.</p>
+                        <span class="badge-status">Locked</span>
+                    </article>
+
+                    <article class="badge-card locked" id="badgeSevenDayStreak">
+                        <span class="badge-icon">🌈</span>
+                        <h4>Consistency King</h4>
+                        <p>Study for 7 consecutive days.</p>
+                        <span class="badge-status">Locked</span>
+                    </article>
+
+                    <article class="badge-card locked" id="badgeFirstHour">
+                        <span class="badge-icon">⏳</span>
+                        <h4>Deep Focus</h4>
+                        <p>Accumulate 60 minutes of focused study.</p>
+                        <span class="badge-status">Locked</span>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- Weekly Study Analytics -->
+        <section class="analytics-section">
+            <div class="analytics-heading">
+                <h2>📊 Weekly Study Analytics</h2>
+                <p>Track your study habits and see how your week is going.</p>
+            </div>
+
+            <div class="analytics-week-heading">
+                <button type="button" id="previousWeekButton" aria-label="View previous week">
+                    &#8592; Previous
+                </button>
+
+                <strong id="analyticsWeekLabel">This Week</strong>
+
+                <button type="button" id="nextWeekButton" aria-label="View next week">
+                    Next &#8594;
+                </button>
+            </div>
+
+            <div class="analytics-cards">
+                <article class="analytics-card">
+                    <span class="analytics-icon">⏱️</span>
+                    <p>Total Focus Time</p>
+                    <h3 id="weeklyFocusTotal">0 min</h3>
+                </article>
+
+                <article class="analytics-card">
+                    <span class="analytics-icon">📅</span>
+                    <p>Daily Average</p>
+                    <h3 id="weeklyFocusAverage">0 min</h3>
+                </article>
+
+                <article class="analytics-card">
+                    <span class="analytics-icon">✅</span>
+                    <p>Tasks Completed</p>
+                    <h3 id="weeklyTasksCompleted">0</h3>
+                </article>
+
+                <article class="analytics-card">
+                    <span class="analytics-icon">🌟</span>
+                    <p>Best Study Day</p>
+                    <h3 id="bestStudyDay">—</h3>
+                </article>
+            </div>
+
+            <div class="weekly-chart-section">
+                <h3>Daily Focus Time</h3>
+                <p class="chart-description">Compare the time you spent studying each day.</p>
+
+                <div id="weeklyChart" class="weekly-chart" role="img"
+                     aria-label="Bar chart showing focus time for each day of the selected week">
+                    <p class="chart-placeholder">Your weekly chart will appear here.</p>
+                </div>
+            </div>
+
+            <p id="analyticsMessage" class="analytics-message" aria-live="polite">
+                Complete a focus session to start building your weekly history.
+            </p>
+        </section>
+
+        <!-- Subject-wise Tracking -->
+        <section class="subject-section">
+            <div class="subject-heading">
+                <h2>📚 Subject-wise Tracking</h2>
+                <p>See how your study time is distributed across subjects.</p>
+            </div>
+
+            <div class="subject-summary-cards" id="subjectSummaryCards">
+                <p class="subject-empty-message">
+                    Your subject study statistics will appear here after you study.
+                </p>
+            </div>
+        </section>
+
+        <!-- Add a Study Task -->
         <section class="task-section">
-            <h2>My Study Tasks</h2>
+            <h2>Add a Study Task</h2>
 
             <form id="taskForm">
-                <input
-                    type="text"
-                    id="taskInput"
-                    placeholder="What do you need to study?"
-                    required
-                >
+                <input type="text" id="taskInput"
+                       placeholder="What do you need to study?" required>
+
+                <select id="taskSubject" aria-label="Task subject" required>
+                    <option value="DSA">DSA</option>
+                    <option value="Java">Java</option>
+                    <option value="Mathematics">Mathematics</option>
+                    <option value="Physics">Physics</option>
+                    <option value="Chemistry">Chemistry</option>
+                    <option value="Other">Other</option>
+                </select>
 
                 <select id="taskPriority" aria-label="Task priority">
                     <option value="High">High Priority</option>
@@ -32,18 +276,55 @@
                     <option value="Low">Low Priority</option>
                 </select>
 
+                <div class="deadline-input">
+                    <label for="taskDueDate">Deadline (optional)</label>
+                    <input type="date" id="taskDueDate">
+                </div>
+
                 <button type="submit" class="add-button">Add Task</button>
             </form>
+        </section>
 
-            <div class="task-summary">
+        <!-- Active Tasks -->
+        <section class="task-section">
+            <div class="section-heading">
+                <h2>📚 Active Tasks</h2>
                 <span id="taskCount">0 tasks</span>
-                <span id="completedCount">0 completed</span>
+            </div>
+
+            <p class="section-description">Your pending assignments and study goals.</p>
+
+            <div class="task-filter-control">
+                <label for="subjectFilter">Filter by subject</label>
+                <select id="subjectFilter">
+                    <option value="All">All Subjects</option>
+                    <option value="DSA">DSA</option>
+                    <option value="Java">Java</option>
+                    <option value="Mathematics">Mathematics</option>
+                    <option value="Physics">Physics</option>
+                    <option value="Chemistry">Chemistry</option>
+                    <option value="Other">Other</option>
+                </select>
             </div>
 
             <ul id="taskList"></ul>
-            <p id="emptyMessage">No tasks yet. Add your first study task!</p>
+            <p id="emptyMessage">No active tasks. Add your first study task!</p>
         </section>
 
+        <!-- Completed Tasks -->
+        <section class="task-section completed-section">
+            <div class="section-heading">
+                <h2>✅ Completed Tasks</h2>
+                <span id="completedCount">0 completed</span>
+            </div>
+
+            <p class="section-description">Look back at what you have accomplished.</p>
+
+            <ul id="completedTaskList"></ul>
+            <p id="completedEmptyMessage">Completed tasks will appear here.</p>
+        </section>
+
+        <!-- Focus Timer -->
         <section class="timer-section">
             <h2>Focus Timer</h2>
             <p>Choose how long you want to study.</p>
@@ -62,18 +343,19 @@
                 <button type="button" onclick="resetTimer()">Reset</button>
             </div>
 
-            <button
-                type="button"
-                class="focus-button"
-                onclick="openFocusMode()"
-            >
+            <button type="button" class="focus-button" onclick="openFocusMode()">
                 Enter Focus Mode
             </button>
         </section>
+
     </div>
 
     <script src="script.js"></script>
 </body>
 </html>
+
+
+
+
 
 
