@@ -1,31 +1,79 @@
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Study Task Tracker</title>
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
+    <div class="container">
+        <header>
+            <h1>Study Task Tracker</h1>
+            <p>Plan your work. Focus on your goals.</p>
+        </header>
 
-    <h1>Study Task Tracker</h1>
+        <section class="task-section">
+            <h2>My Study Tasks</h2>
 
-    <input type="text" id="taskInput" placeholder="Enter a study task">
+            <form id="taskForm">
+                <input
+                    type="text"
+                    id="taskInput"
+                    placeholder="What do you need to study?"
+                    required
+                >
 
-    <button onclick="addTask()">Add Task</button>
+                <select id="taskPriority" aria-label="Task priority">
+                    <option value="High">High Priority</option>
+                    <option value="Medium" selected>Medium Priority</option>
+                    <option value="Low">Low Priority</option>
+                </select>
 
-    <ul id="taskList"></ul>
+                <button type="submit" class="add-button">Add Task</button>
+            </form>
 
-    <hr>
+            <div class="task-summary">
+                <span id="taskCount">0 tasks</span>
+                <span id="completedCount">0 completed</span>
+            </div>
 
-    <h2>Focus Timer</h2>
+            <ul id="taskList"></ul>
+            <p id="emptyMessage">No tasks yet. Add your first study task!</p>
+        </section>
 
-    <h1 id="timer">25:00</h1>
+        <section class="timer-section">
+            <h2>Focus Timer</h2>
+            <p>Choose how long you want to study.</p>
 
-    <button onclick="startTimer()">Start</button>
-    <button onclick="pauseTimer()">Pause</button>
-    <button onclick="resetTimer()">Reset</button>
+            <div class="duration-buttons">
+                <button type="button" onclick="setDuration(25)">25 min</button>
+                <button type="button" onclick="setDuration(45)">45 min</button>
+                <button type="button" onclick="setDuration(60)">60 min</button>
+            </div>
+
+            <h1 id="timer">25:00</h1>
+
+            <div class="timer-buttons">
+                <button type="button" onclick="startTimer()">Start</button>
+                <button type="button" onclick="pauseTimer()">Pause</button>
+                <button type="button" onclick="resetTimer()">Reset</button>
+            </div>
+
+            <button
+                type="button"
+                class="focus-button"
+                onclick="openFocusMode()"
+            >
+                Enter Focus Mode
+            </button>
+        </section>
+    </div>
 
     <script src="script.js"></script>
-
 </body>
 </html>
+
+
