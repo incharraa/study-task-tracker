@@ -1,6 +1,31 @@
 
 let tasks = [];
-let nextTaskId = 1;
+
+try {
+    let savedTasks = localStorage.getItem("studyTasks");
+
+    if (savedTasks) {
+        let parsedTasks = JSON.parse(savedTasks);
+
+        if (Array.isArray(parsedTasks)) {
+            tasks = parsedTasks.filter(function(task) {
+                return task &&
+                    Number.isInteger(task.id) &&
+                    typeof task.name === "string" &&
+                    ["High", "Medium", "Low"].includes(task.priority) &&
+                    typeof task.completed === "boolean";
+            });
+        }
+    }
+} catch (error) {
+    tasks = [];
+}
+
+let nextTaskId = tasks.length > 0
+    ? Math.max(...tasks.map(function(task) {
+        return task.id;
+    })) + 1
+    : 1;
 
 let selectedMinutes = 25;
 let time = selectedMinutes * 60;
@@ -9,6 +34,17 @@ let focusScreen = null;
 let currentTaskId = null;
 let endTime = null;
 let warningTimeout = null;
+
+
+// Save tasks in the browser
+
+function saveTasks() {
+    try {
+        localStorage.setItem("studyTasks", JSON.stringify(tasks));
+    } catch (error) {
+        alert("Unable to save tasks in this browser.");
+    }
+}
 
 
 // Add a new task
@@ -33,6 +69,7 @@ document.getElementById("taskForm").addEventListener("submit", function(event) {
     });
 
     input.value = "";
+    saveTasks();
     renderTasks();
 });
 
@@ -61,6 +98,7 @@ function renderTasks() {
 
         checkbox.addEventListener("change", function() {
             task.completed = checkbox.checked;
+            saveTasks();
             renderTasks();
         });
 
@@ -82,7 +120,6 @@ function renderTasks() {
         deleteButton.type = "button";
         deleteButton.className = "delete-button";
         deleteButton.textContent = "Delete";
-        deleteButton.setAttribute("aria-label", "Delete " + task.name);
 
         deleteButton.addEventListener("click", function() {
             deleteTask(task.id);
@@ -122,11 +159,12 @@ function deleteTask(id) {
         currentTaskId = null;
     }
 
+    saveTasks();
     renderTasks();
 }
 
 
-// Update task dropdown in Focus Mode
+// Update the Focus Mode task dropdown
 
 function updateTaskOptions() {
     let select = document.getElementById("focusTask");
@@ -175,7 +213,7 @@ function updateTaskOptions() {
 }
 
 
-// Show the selected task inside Focus Mode
+// Display the current assignment
 
 function updateCurrentTaskDisplay() {
     let display = document.getElementById("currentTaskDisplay");
@@ -194,7 +232,7 @@ function updateCurrentTaskDisplay() {
 }
 
 
-// Timer display
+// Update timer display
 
 function updateTimer() {
     let minutes = Math.floor(time / 60);
@@ -314,16 +352,11 @@ function openFocusMode() {
 
     focusScreen.innerHTML = `
         <h1>Focus Mode</h1>
-
         <p>Choose your current assignment:</p>
 
-        <select id="focusTask"
-            aria-label="Choose current assignment">
-        </select>
+        <select id="focusTask" aria-label="Choose current assignment"></select>
 
-        <h2 id="currentTaskDisplay">
-            Choose a task to begin.
-        </h2>
+        <h2 id="currentTaskDisplay">Choose a task to begin.</h2>
 
         <h1 id="focusTimer">25:00</h1>
 
@@ -333,15 +366,10 @@ function openFocusMode() {
             <button type="button" id="focusReset">Reset</button>
         </div>
 
-        <p id="focusWarning"
-            role="status"
-            aria-live="polite"
-            style="color:#ffcc66; min-height:24px;">
-        </p>
+        <p id="focusWarning" role="status" aria-live="polite"
+            style="color:#ffcc66; min-height:24px;"></p>
 
-        <button type="button" id="exitFocus">
-            Exit Focus Mode
-        </button>
+        <button type="button" id="exitFocus">Exit Focus Mode</button>
     `;
 
     document.body.appendChild(focusScreen);
@@ -360,9 +388,7 @@ function openFocusMode() {
     document.getElementById("exitFocus").addEventListener("click", closeFocusMode);
 
     if (document.documentElement.requestFullscreen) {
-        document.documentElement.requestFullscreen().catch(function() {
-            // Focus Mode still works if fullscreen is unavailable.
-        });
+        document.documentElement.requestFullscreen().catch(function() {});
     }
 }
 
@@ -386,7 +412,7 @@ function closeFocusMode() {
 }
 
 
-// Warn when returning to the browser tab
+// Warn when returning to the tab
 
 document.addEventListener("visibilitychange", function() {
     if (document.hidden || !focusScreen) {
@@ -415,7 +441,7 @@ document.addEventListener("visibilitychange", function() {
 });
 
 
-// Initialize the app
+// Load saved tasks when the app opens
 
 renderTasks();
 updateTimer();
