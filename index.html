@@ -1,361 +1,1187 @@
-
 <!DOCTYPE html>
+
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Study Task Tracker</title>
+
     <link rel="stylesheet" href="style.css">
+
+    <meta name="theme-color" content="#4f46e5">
+
+    <meta name="description" content="Plan study tasks, focus sessions, and deadlines in your personal Study Tracker.">
+
+    <link rel="manifest" href="manifest.json">
+
+    <link rel="icon" href="icons/study-icon-192.png" type="image/png">
+
 </head>
 
+ 
+
 <body>
+
     <div class="container">
 
+ 
+
         <header>
+
             <h1>Study Task Tracker</h1>
-            <p>Plan your work. Focus on your goals.</p>
+
+            <p id="welcomeGreeting">Plan your work. Focus on your goals.</p>
+
+            <button type="button" id="editStudentNameButton" class="edit-student-name-button">
+
+                Set Your Name
+
+            </button>
+
+            <button type="button" id="openSettingsButton" class="settings-open-button">
+
+                ⚙️ Settings
+
+            </button>
+
         </header>
 
+ 
+
         <!-- Study Dashboard -->
+
         <section class="dashboard-section">
+
             <div class="dashboard-heading">
+
                 <div>
+
                     <h2>Today's Study Dashboard</h2>
+
                     <p class="dashboard-subtitle">A small step every day adds up.</p>
+
                 </div>
+
+ 
 
                 <div class="goal-control">
+
                     <label for="dailyGoal">Daily goal (minutes)</label>
+
                     <input type="number" id="dailyGoal" min="1" max="1440" value="120">
+
                     <button type="button" id="saveGoalButton">Set Goal</button>
+
                 </div>
+
             </div>
+
+ 
 
             <div class="dashboard-cards">
+
                 <article class="stat-card">
+
                     <span class="stat-icon">🎯</span>
+
                     <p>Daily goal</p>
+
                     <h3 id="goalDisplay">120 min</h3>
+
                 </article>
 
+ 
+
                 <article class="stat-card">
+
                     <span class="stat-icon">⏱️</span>
+
                     <p>Focused today</p>
+
                     <h3 id="focusTimeDisplay">0 min</h3>
+
                 </article>
 
+ 
+
                 <article class="stat-card">
+
                     <span class="stat-icon">✅</span>
+
                     <p>Tasks completed</p>
+
                     <h3 id="dashboardCompleted">0 / 0</h3>
+
                 </article>
 
+ 
+
                 <article class="stat-card">
+
                     <span class="stat-icon">📌</span>
+
                     <p>Tasks pending</p>
+
                     <h3 id="dashboardPending">0</h3>
+
                 </article>
+
             </div>
+
+ 
 
             <div class="goal-progress">
+
                 <div class="progress-labels">
+
                     <span>Daily focus progress</span>
+
                     <strong id="goalProgressText">0%</strong>
+
                 </div>
 
+ 
+
                 <div class="progress-track" role="progressbar"
+
                      aria-label="Daily study goal progress"
+
                      aria-valuemin="0" aria-valuemax="100"
+
                      aria-valuenow="0" id="goalProgressBar">
+
                     <div id="goalProgressFill"></div>
+
                 </div>
+
+ 
 
                 <p id="goalMessage">Start a focus session to make progress toward your goal.</p>
+
             </div>
+
         </section>
+
+ 
+
+        <!-- Daily Study Timetable -->
+
+        <section class="timetable-section" id="dailyTimetableSection">
+
+            <div class="timetable-heading">
+
+                <div>
+
+                    <h2>🗓️ Daily Study Timetable</h2>
+
+                    <p>Plan your study sessions and keep track of what you finish.</p>
+
+                </div>
+
+                <div class="timetable-date-navigation">
+
+                    <button type="button" id="timetablePreviousDay" aria-label="Previous day">&#8592;</button>
+
+                    <button type="button" id="timetableTodayButton">Today</button>
+
+                    <button type="button" id="timetableNextDay" aria-label="Next day">&#8594;</button>
+
+                </div>
+
+            </div>
+
+ 
+
+            <h3 id="timetableDateHeading">Today's Plan</h3>
+
+            <div class="timetable-summary-cards">
+
+                <article class="timetable-summary-card">
+
+                    <span>📚</span><p>Planned sessions</p><strong id="timetableSessionCount">0</strong>
+
+                </article>
+
+                <article class="timetable-summary-card">
+
+                    <span>⏱️</span><p>Planned study time</p><strong id="timetablePlannedTime">0 min</strong>
+
+                </article>
+
+                <article class="timetable-summary-card">
+
+                    <span>✅</span><p>Completed sessions</p><strong id="timetableCompletedCount">0 / 0</strong>
+
+                </article>
+
+            </div>
+
+ 
+
+            <form id="timetableForm" class="timetable-form">
+
+                <div class="timetable-form-heading">
+
+                    <h3>Add a study session</h3>
+
+                    <p>Choose a subject, time, and optional topic.</p>
+
+                </div>
+
+                <div class="timetable-form-grid">
+
+                    <div class="timetable-field timetable-field-wide">
+
+                        <label for="timetableSubject">Subject</label>
+
+                        <select id="timetableSubject" required></select>
+
+                    </div>
+
+                    <div class="timetable-field timetable-field-wide">
+
+                        <label for="timetableTopic">Topic / task (optional)</label>
+
+                        <input type="text" id="timetableTopic" maxlength="100" placeholder="e.g. Binary Search practice">
+
+                    </div>
+
+                    <div class="timetable-field">
+
+                        <label for="timetableStartTime">Start time</label>
+
+                        <input type="time" id="timetableStartTime" value="09:00" required>
+
+                    </div>
+
+                    <div class="timetable-field">
+
+                        <label for="timetableEndTime">End time</label>
+
+                        <input type="time" id="timetableEndTime" value="10:00" required>
+
+                    </div>
+
+                </div>
+
+                <button type="submit" class="timetable-add-button">+ Add to timetable</button>
+
+                <p id="timetableFormMessage" class="timetable-form-message" aria-live="polite"></p>
+
+            </form>
+
+ 
+
+            <div class="timetable-sessions-heading">
+
+                <h3 id="timetableSessionsTitle">Your sessions</h3>
+
+                <span id="timetableCompletionNote">Tick a session when you finish it.</span>
+
+            </div>
+
+            <div id="timetableSessionsList" class="timetable-sessions-list">
+
+                <p class="timetable-empty-state">No study sessions planned for this day yet.</p>
+
+            </div>
+
+        </section>
+
+ 
 
         <!-- Study Achievements -->
+
         <section class="achievements-section">
+
             <div class="achievements-heading">
+
                 <div>
+
                     <h2>🏆 Study Achievements</h2>
+
                     <p class="achievements-subtitle">
+
                         Build your streak, earn XP, and celebrate your progress!
+
                     </p>
+
                 </div>
+
             </div>
+
+ 
 
             <div class="achievement-stats">
+
                 <article class="achievement-card streak-card">
+
                     <span class="achievement-icon">🔥</span>
+
                     <p>Current Streak</p>
+
                     <h3><span id="currentStreak">0</span> <small>days</small></h3>
+
                     <p class="achievement-note">Keep showing up every day!</p>
+
                 </article>
+
+ 
 
                 <article class="achievement-card">
+
                     <span class="achievement-icon">🌟</span>
+
                     <p>Best Streak</p>
+
                     <h3><span id="bestStreak">0</span> <small>days</small></h3>
+
                     <p class="achievement-note">Your personal record</p>
+
                 </article>
+
+ 
 
                 <article class="achievement-card xp-card">
+
                     <span class="achievement-icon">⚡</span>
+
                     <p>Total XP</p>
+
                     <h3 id="totalXP">0 XP</h3>
+
                     <p class="achievement-note">Every effort counts</p>
+
                 </article>
+
+ 
 
                 <article class="achievement-card level-card">
+
                     <span class="achievement-icon">🎖️</span>
+
                     <p>Study Level</p>
+
                     <h3 id="studyLevel">Level 1</h3>
+
                     <p class="achievement-note" id="levelMessage">Your journey starts here!</p>
+
                 </article>
+
             </div>
+
+ 
 
             <div class="xp-progress-section">
+
                 <div class="progress-labels">
+
                     <span>Progress to next level</span>
+
                     <strong id="xpProgressText">0 / 100 XP</strong>
+
                 </div>
+
+ 
 
                 <div class="progress-track" role="progressbar"
+
                      aria-label="Progress to next study level"
+
                      aria-valuemin="0" aria-valuemax="100"
+
                      aria-valuenow="0" id="xpProgressBar">
+
                     <div id="xpProgressFill"></div>
+
                 </div>
+
             </div>
+
+ 
 
             <div class="badges-section">
+
                 <h3>🎯 Achievement Badges</h3>
+
                 <p class="achievement-note">Unlock badges as you reach new milestones.</p>
 
+ 
+
                 <div class="badges-grid" id="badgesGrid">
+
                     <article class="badge-card locked" id="badgeFirstTask">
+
                         <span class="badge-icon">📘</span>
+
                         <h4>First Step</h4>
+
                         <p>Complete your first study task.</p>
+
                         <span class="badge-status">Locked</span>
+
                     </article>
+
+ 
 
                     <article class="badge-card locked" id="badgeFiveTasks">
+
                         <span class="badge-icon">📚</span>
+
                         <h4>Bookworm</h4>
+
                         <p>Complete 5 study tasks.</p>
+
                         <span class="badge-status">Locked</span>
+
                     </article>
+
+ 
 
                     <article class="badge-card locked" id="badgeTenTasks">
+
                         <span class="badge-icon">🏅</span>
+
                         <h4>Task Champion</h4>
+
                         <p>Complete 10 study tasks.</p>
+
                         <span class="badge-status">Locked</span>
+
                     </article>
+
+ 
 
                     <article class="badge-card locked" id="badgeThreeDayStreak">
+
                         <span class="badge-icon">🔥</span>
+
                         <h4>On Fire</h4>
+
                         <p>Study for 3 consecutive days.</p>
+
                         <span class="badge-status">Locked</span>
+
                     </article>
+
+ 
 
                     <article class="badge-card locked" id="badgeSevenDayStreak">
+
                         <span class="badge-icon">🌈</span>
+
                         <h4>Consistency King</h4>
+
                         <p>Study for 7 consecutive days.</p>
+
                         <span class="badge-status">Locked</span>
+
                     </article>
+
+ 
 
                     <article class="badge-card locked" id="badgeFirstHour">
+
                         <span class="badge-icon">⏳</span>
+
                         <h4>Deep Focus</h4>
+
                         <p>Accumulate 60 minutes of focused study.</p>
+
                         <span class="badge-status">Locked</span>
+
                     </article>
+
                 </div>
+
             </div>
+
         </section>
 
+ 
+
         <!-- Weekly Study Analytics -->
+
         <section class="analytics-section">
+
             <div class="analytics-heading">
+
                 <h2>📊 Weekly Study Analytics</h2>
+
                 <p>Track your study habits and see how your week is going.</p>
+
             </div>
 
+ 
+
             <div class="analytics-week-heading">
+
                 <button type="button" id="previousWeekButton" aria-label="View previous week">
+
                     &#8592; Previous
+
                 </button>
+
+ 
 
                 <strong id="analyticsWeekLabel">This Week</strong>
 
+ 
+
                 <button type="button" id="nextWeekButton" aria-label="View next week">
+
                     Next &#8594;
+
                 </button>
+
             </div>
+
+ 
 
             <div class="analytics-cards">
+
                 <article class="analytics-card">
+
                     <span class="analytics-icon">⏱️</span>
+
                     <p>Total Focus Time</p>
+
                     <h3 id="weeklyFocusTotal">0 min</h3>
+
                 </article>
 
+ 
+
                 <article class="analytics-card">
+
                     <span class="analytics-icon">📅</span>
+
                     <p>Daily Average</p>
+
                     <h3 id="weeklyFocusAverage">0 min</h3>
+
                 </article>
 
+ 
+
                 <article class="analytics-card">
+
                     <span class="analytics-icon">✅</span>
+
                     <p>Tasks Completed</p>
+
                     <h3 id="weeklyTasksCompleted">0</h3>
+
                 </article>
 
+ 
+
                 <article class="analytics-card">
+
                     <span class="analytics-icon">🌟</span>
+
                     <p>Best Study Day</p>
+
                     <h3 id="bestStudyDay">—</h3>
+
                 </article>
+
             </div>
+
+ 
 
             <div class="weekly-chart-section">
+
                 <h3>Daily Focus Time</h3>
+
                 <p class="chart-description">Compare the time you spent studying each day.</p>
 
+ 
+
                 <div id="weeklyChart" class="weekly-chart" role="img"
+
                      aria-label="Bar chart showing focus time for each day of the selected week">
+
                     <p class="chart-placeholder">Your weekly chart will appear here.</p>
+
                 </div>
+
             </div>
+
+ 
 
             <p id="analyticsMessage" class="analytics-message" aria-live="polite">
+
                 Complete a focus session to start building your weekly history.
+
             </p>
+
         </section>
+
+ 
 
         <!-- Subject-wise Tracking -->
+
         <section class="subject-section">
+
             <div class="subject-heading">
+
                 <h2>📚 Subject-wise Tracking</h2>
+
                 <p>See how your study time is distributed across subjects.</p>
+
             </div>
+
+ 
 
             <div class="subject-summary-cards" id="subjectSummaryCards">
+
                 <p class="subject-empty-message">
+
                     Your subject study statistics will appear here after you study.
+
                 </p>
+
             </div>
+
         </section>
 
-        <!-- Add a Study Task -->
-        <section class="task-section">
-            <h2>Add a Study Task</h2>
+ 
 
-            <form id="taskForm">
-                <input type="text" id="taskInput"
-                       placeholder="What do you need to study?" required>
+ 
 
-                <select id="taskSubject" aria-label="Task subject" required>
-                    <option value="DSA">DSA</option>
-                    <option value="Java">Java</option>
-                    <option value="Mathematics">Mathematics</option>
-                    <option value="Physics">Physics</option>
-                    <option value="Chemistry">Chemistry</option>
-                    <option value="Other">Other</option>
-                </select>
+        <!-- Study Calendar -->
 
-                <select id="taskPriority" aria-label="Task priority">
-                    <option value="High">High Priority</option>
-                    <option value="Medium" selected>Medium Priority</option>
-                    <option value="Low">Low Priority</option>
-                </select>
+        <section class="study-calendar-section">
 
-                <div class="deadline-input">
-                    <label for="taskDueDate">Deadline (optional)</label>
-                    <input type="date" id="taskDueDate">
+            <div class="calendar-heading">
+
+                <div>
+
+                    <h2>🗓️ Study Calendar</h2>
+
+                    <p>See deadlines, completed tasks, and what's coming up.</p>
+
                 </div>
 
-                <button type="submit" class="add-button">Add Task</button>
-            </form>
+                <div class="calendar-navigation">
+
+                    <button type="button" id="calendarPrevMonth" aria-label="Previous month">&#8592;</button>
+
+                    <h3 id="calendarMonthLabel">Month Year</h3>
+
+                    <button type="button" id="calendarNextMonth" aria-label="Next month">&#8594;</button>
+
+                </div>
+
+            </div>
+
+ 
+
+            <div class="calendar-legend">
+
+                <span><i class="calendar-dot calendar-dot-pending"></i> Pending deadline</span>
+
+                <span><i class="calendar-dot calendar-dot-completed"></i> Completed</span>
+
+                <span><i class="calendar-dot calendar-dot-overdue"></i> Overdue</span>
+
+            </div>
+
+ 
+
+            <div class="study-calendar-weekdays" aria-hidden="true">
+
+                <span>Sun</span><span>Mon</span><span>Tue</span>
+
+                <span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span>
+
+            </div>
+
+            <div id="studyCalendarGrid" class="study-calendar-grid" aria-label="Monthly study calendar"></div>
+
+ 
+
+            <div class="calendar-selected-day">
+
+                <h3 id="calendarSelectedDateTitle">Tasks for selected date</h3>
+
+                <div id="calendarSelectedTasks" class="calendar-task-list">
+
+                    <p>Select a date to see its tasks.</p>
+
+                </div>
+
+            </div>
+
+ 
+
+            <div class="upcoming-deadlines">
+
+                <h3>⏳ Upcoming Deadlines</h3>
+
+                <p class="calendar-section-description">Your next pending tasks with deadlines.</p>
+
+                <div id="upcomingDeadlinesList" class="upcoming-deadlines-list">
+
+                    <p>No upcoming deadlines.</p>
+
+                </div>
+
+            </div>
+
         </section>
 
-        <!-- Active Tasks -->
-        <section class="task-section">
-            <div class="section-heading">
-                <h2>📚 Active Tasks</h2>
-                <span id="taskCount">0 tasks</span>
+ 
+
+        <!-- Productivity Insights -->
+
+        <section class="insights-section">
+
+            <div class="insights-heading">
+
+                <h2>💡 Productivity Insights</h2>
+
+                <p>Discover your study habits and track your improvement.</p>
+
             </div>
+
+ 
+
+            <div class="insights-grid">
+
+                <article class="insight-card">
+
+                    <span class="insight-icon">🏆</span>
+
+                    <h3>Most Productive Subject</h3>
+
+                    <p id="mostProductiveSubject">Not enough data yet</p>
+
+                    <small id="mostProductiveSubjectTime">Complete a focus session to begin.</small>
+
+                </article>
+
+ 
+
+                <article class="insight-card">
+
+                    <span class="insight-icon">🕒</span>
+
+                    <h3>Preferred Study Period</h3>
+
+                    <p id="preferredStudyPeriod">Collecting data...</p>
+
+                    <small id="preferredStudyPeriodTime">Based on your recorded focus time.</small>
+
+                </article>
+
+ 
+
+                <article class="insight-card">
+
+                    <span class="insight-icon">📅</span>
+
+                    <h3>Best Study Day</h3>
+
+                    <p id="insightBestStudyDay">Not enough data yet</p>
+
+                    <small id="insightBestStudyDayTime">Your strongest weekday will appear here.</small>
+
+                </article>
+
+ 
+
+                <article class="insight-card">
+
+                    <span class="insight-icon">📈</span>
+
+                    <h3>Weekly Progress</h3>
+
+                    <p id="weeklyProgressChange">Collecting data...</p>
+
+                    <small id="weeklyProgressMessage">Compared with the previous week.</small>
+
+                </article>
+
+            </div>
+
+        </section>
+
+ 
+
+        <!-- Manage Custom Subjects -->
+
+        <section class="manage-subjects-section">
+
+            <h2>📝 Manage Your Subjects</h2>
+
+            <p>Add the subjects you study. You can rename or remove them later.</p>
+
+            <form id="subjectForm" class="subject-form">
+
+                <input type="text" id="newSubjectName" placeholder="Enter a subject name" maxlength="40" required>
+
+                <button type="submit">Add Subject</button>
+
+            </form>
+
+            <div id="subjectManagerList" class="subject-manager-list"></div>
+
+        </section>
+
+ 
+
+        <!-- Add a Study Task -->
+
+        <section class="task-section">
+
+            <h2>Add a Study Task</h2>
+
+ 
+
+            <form id="taskForm">
+
+                <input type="text" id="taskInput"
+
+                       placeholder="What do you need to study?" required>
+
+ 
+
+                <select id="taskSubject" aria-label="Task subject" required></select>
+
+ 
+
+                <select id="taskPriority" aria-label="Task priority">
+
+                    <option value="High">High Priority</option>
+
+                    <option value="Medium" selected>Medium Priority</option>
+
+                    <option value="Low">Low Priority</option>
+
+                </select>
+
+ 
+
+                <div class="deadline-input">
+
+                    <label for="taskDueDate">Deadline (optional)</label>
+
+                    <input type="date" id="taskDueDate">
+
+                </div>
+
+ 
+
+                <button type="submit" class="add-button">Add Task</button>
+
+            </form>
+
+        </section>
+
+ 
+
+        <!-- Active Tasks -->
+
+        <section class="task-section">
+
+            <div class="section-heading">
+
+                <h2>📚 Active Tasks</h2>
+
+                <span id="taskCount">0 tasks</span>
+
+            </div>
+
+ 
 
             <p class="section-description">Your pending assignments and study goals.</p>
 
+ 
+
             <div class="task-filter-control">
+
                 <label for="subjectFilter">Filter by subject</label>
+
                 <select id="subjectFilter">
+
                     <option value="All">All Subjects</option>
-                    <option value="DSA">DSA</option>
-                    <option value="Java">Java</option>
-                    <option value="Mathematics">Mathematics</option>
-                    <option value="Physics">Physics</option>
-                    <option value="Chemistry">Chemistry</option>
-                    <option value="Other">Other</option>
+
                 </select>
+
             </div>
+
+ 
 
             <ul id="taskList"></ul>
+
             <p id="emptyMessage">No active tasks. Add your first study task!</p>
+
         </section>
 
+ 
+
         <!-- Completed Tasks -->
+
         <section class="task-section completed-section">
+
             <div class="section-heading">
+
                 <h2>✅ Completed Tasks</h2>
+
                 <span id="completedCount">0 completed</span>
+
             </div>
+
+ 
 
             <p class="section-description">Look back at what you have accomplished.</p>
 
+ 
+
             <ul id="completedTaskList"></ul>
+
             <p id="completedEmptyMessage">Completed tasks will appear here.</p>
+
         </section>
+
+ 
 
         <!-- Focus Timer -->
+
         <section class="timer-section">
+
             <h2>Focus Timer</h2>
+
             <p>Choose how long you want to study.</p>
 
-            <div class="duration-buttons">
-                <button type="button" onclick="setDuration(25)">25 min</button>
-                <button type="button" onclick="setDuration(45)">45 min</button>
-                <button type="button" onclick="setDuration(60)">60 min</button>
+ 
+
+            <div class="timer-duration-picker">
+
+                <label for="timerHours">Hours</label>
+
+                <select id="timerHours" aria-label="Timer hours"></select>
+
+                <label for="timerMinutes">Minutes</label>
+
+                <select id="timerMinutes" aria-label="Timer minutes"></select>
+
+                <button type="button" id="setTimerDuration">Set Duration</button>
+
             </div>
 
-            <h1 id="timer">25:00</h1>
+ 
+
+            <h1 id="timer">00:25:00</h1>
+
+ 
 
             <div class="timer-buttons">
+
                 <button type="button" onclick="startTimer()">Start</button>
+
                 <button type="button" onclick="pauseTimer()">Pause</button>
+
                 <button type="button" onclick="resetTimer()">Reset</button>
+
             </div>
 
+ 
+
             <button type="button" class="focus-button" onclick="openFocusMode()">
+
                 Enter Focus Mode
+
             </button>
+
         </section>
+
+ 
 
     </div>
 
+ 
+
+ 
+
+ 
+
+ 
+
+    <!-- Separate Settings Panel -->
+
+    <section id="settingsPanel" class="settings-panel" hidden>
+
+        <div class="settings-heading">
+
+            <div>
+
+                <h2>⚙️ Settings</h2>
+
+                <p>Customize your Study Tracker.</p>
+
+            </div>
+
+            <button type="button" id="closeSettingsButton">✕ Back to Dashboard</button>
+
+        </div>
+
+ 
+
+        <div class="settings-group">
+
+            <h3>Appearance</h3>
+
+            <p>Choose the look that feels comfortable for you.</p>
+
+            <div class="settings-field">
+
+                <label for="themeSelector">Theme</label>
+
+                <select id="themeSelector">
+
+                    <option value="light">☀️ Light Mode</option>
+
+                    <option value="dark">🌙 Dark Mode</option>
+
+                    <option value="lavender">💜 Lavender Theme</option>
+
+                </select>
+
+            </div>
+
+        </div>
+
+ 
+
+        <div class="settings-group">
+
+            <h3>More Settings</h3>
+
+            <p>Additional preferences can be added here later.</p>
+
+        </div>
+
+    </section>
+
+ 
+
+    <!-- Student Name Setup -->
+
+    <div id="studentNameModal" class="student-name-modal" hidden>
+
+        <div class="student-name-dialog" role="dialog" aria-modal="true"
+
+             aria-labelledby="studentNameTitle">
+
+            <div class="student-name-avatar" aria-hidden="true">👋</div>
+
+            <h2 id="studentNameTitle">Welcome to your Study Tracker!</h2>
+
+            <p>What should we call you?</p>
+
+            <form id="studentNameForm">
+
+                <label for="studentNameInput">Your name</label>
+
+                <input type="text" id="studentNameInput" maxlength="60"
+
+                       placeholder="Enter your name" autocomplete="given-name" required>
+
+                <p id="studentNameError" class="student-name-error" aria-live="polite"></p>
+
+                <div class="student-name-actions">
+
+                    <button type="submit" id="saveStudentNameButton">Let's Study!</button>
+
+                    <button type="button" id="cancelStudentNameButton" class="secondary-name-button" hidden>
+
+                        Cancel
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+ 
+
     <script src="script.js"></script>
+
+    <script>
+
+        (function () {
+
+            const openButton = document.getElementById("openSettingsButton");
+
+            const closeButton = document.getElementById("closeSettingsButton");
+
+            const settingsPanel = document.getElementById("settingsPanel");
+
+            const mainContainer = document.querySelector(".container");
+
+ 
+
+            if (openButton && closeButton && settingsPanel && mainContainer) {
+
+                openButton.addEventListener("click", function () {
+
+                    mainContainer.hidden = true;
+
+                    settingsPanel.hidden = false;
+
+                    window.scrollTo(0, 0);
+
+                });
+
+ 
+
+                closeButton.addEventListener("click", function () {
+
+                    settingsPanel.hidden = true;
+
+                    mainContainer.hidden = false;
+
+                    window.scrollTo(0, 0);
+
+                });
+
+            }
+
+        })();
+
+    </script>
+
+ 
+
+    <script>
+
+        if ("serviceWorker" in navigator) {
+
+            window.addEventListener("load", function () {
+
+                navigator.serviceWorker.register("./service-worker.js").catch(function (error) {
+
+                    console.error("Service worker registration failed:", error);
+
+                });
+
+            });
+
+        }
+
+    </script>
+
 </body>
+
 </html>
-
-
-
-
-
-
