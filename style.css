@@ -1234,356 +1234,55 @@ body.focus-mode .timetable-section { display: none; }
     .timetable-field-wide { grid-column: auto; }
 }
  
-/* Exam and Syllabus Tracker */
-.exam-tracker-section { margin: 24px 0; padding: 24px; background: var(--card-bg, #fff); border: 1px solid var(--border-color, #e5e7eb); border-radius: 16px; box-shadow: 0 4px 16px rgba(15, 23, 42, .04); }
-.exam-tracker-heading h2 { margin: 0 0 6px; }
-.exam-tracker-heading p { margin: 0 0 20px; color: var(--muted-text, #6b7280); }
-.exam-form { padding: 16px; border: 1px solid #e5e7eb; border-radius: 12px; background: #fafaff; }
-.exam-form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
-.exam-field { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
-.exam-field label { font-size: .9rem; font-weight: 600; }
-.exam-field input, .exam-field select { width: 100%; box-sizing: border-box; padding: 11px 12px; border: 1px solid #d1d5db; border-radius: 8px; background: #fff; color: #111827; font: inherit; }
-.exam-add-button { margin-top: 14px; }
-.exam-form-message { min-height: 1.2em; margin: 9px 0 0; color: #4f46e5; font-size: .9rem; }
-.exam-tracker-summary { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 18px 0; }
-.exam-tracker-summary article { padding: 15px; border: 1px solid #e5e7eb; border-radius: 12px; background: #fff; }
-.exam-tracker-summary article span { font-size: 1.2rem; }
-.exam-tracker-summary article p { margin: 7px 0 4px; color: #6b7280; font-size: .88rem; }
-.exam-tracker-summary article strong { font-size: 1.4rem; color: #4338ca; }
-.exam-tracker-list { display: grid; gap: 14px; }
-.exam-card { border: 1px solid #e5e7eb; border-radius: 12px; padding: 16px; background: #fff; }
-.exam-card-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
-.exam-card-heading h3 { margin: 0 0 5px; font-size: 1.05rem; }
-.exam-card-heading p { margin: 0; color: #6b7280; font-size: .9rem; }
-.exam-countdown { flex-shrink: 0; padding: 6px 9px; border-radius: 999px; background: #eef2ff; color: #4338ca; font-size: .8rem; font-weight: 700; }
-.exam-countdown.exam-soon { background: #fff7ed; color: #c2410c; }
-.exam-topic-list { display: grid; gap: 8px; }
-.exam-topic-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 12px; border-radius: 8px; background: #f9fafb; }
-.exam-topic-label { display: flex; align-items: center; gap: 9px; min-width: 0; overflow-wrap: anywhere; }
-.exam-topic-label input { accent-color: #16a34a; width: 16px; height: 16px; flex-shrink: 0; }
-.exam-topic-completed .exam-topic-label span { text-decoration: line-through; color: #6b7280; }
-.exam-delete-button { padding: 6px 9px; border: 1px solid #fecaca; border-radius: 7px; color: #b91c1c; background: #fff; cursor: pointer; }
-.exam-empty-state { padding: 22px; text-align: center; border: 1px dashed #d1d5db; border-radius: 12px; color: #6b7280; background: #f9fafb; }
-body.focus-mode .exam-tracker-section { display: none; }
-@media (max-width: 650px) { .exam-tracker-section { padding: 17px; } .exam-form-grid, .exam-tracker-summary { grid-template-columns: 1fr; } .exam-card-heading { flex-direction: column; } }
-
  
-/* ===== Focus Mode Fix ===== */
-
-body.focus-mode {
-    min-height: 100vh;
-    margin: 0;
-    background: #17152b;
-}
-
-body.focus-mode .container {
-    width: 100%;
-    max-width: none;
-    min-height: 100vh;
-    margin: 0;
-    padding: 20px;
-    box-sizing: border-box;
-
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 0;
-}
-
-/* Hide all direct children except the Focus Timer */
-body.focus-mode .container > *:not(.timer-section) {
-    display: none !important;
-}
-
-/* Center the Focus Timer */
-body.focus-mode .container > .timer-section {
-    display: block !important;
-    width: min(100%, 600px);
-    margin: 0 auto;
-    padding: 30px 24px;
-    box-sizing: border-box;
-
-    background: #24203e;
-    color: #ffffff;
-    border: 1px solid #514580;
-    border-radius: 16px;
-    text-align: center;
-}
-
-body.focus-mode .timer-section h2,
-body.focus-mode .timer-section h1 {
-    color: #c4b5fd;
-}
-
-body.focus-mode .timer-section p,
-body.focus-mode .timer-section label {
-    color: #ffffff;
-}
-
-body.focus-mode .timer-duration-picker,
-body.focus-mode .timer-buttons {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin: 16px 0;
-}
-
-body.focus-mode .timer-section #timer {
-    font-size: clamp(42px, 8vw, 64px);
-    margin: 20px 0;
-}
-
-@media (max-width: 600px) {
-    body.focus-mode .container {
-        padding: 14px;
-    }
-
-    body.focus-mode .container > .timer-section {
-        padding: 24px 14px;
-    }
-}
-
-
-/* ==========================================
-   DARK MODE AND THEMES
-========================================== */
-
-.theme-control {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 12px;
-}
-
-.theme-control label {
-    font-weight: 600;
-}
-
-.theme-control select {
-    padding: 9px 12px;
-    border: 1px solid #c7c5d8;
-    border-radius: 8px;
-    background: #ffffff;
-    color: #25243a;
-    font: inherit;
-}
-
-/* Dark theme */
-body[data-theme="dark"] {
-    background: #17152b;
-    color: #f3f0ff;
-}
-
-body[data-theme="dark"] .container {
-    color: #f3f0ff;
-}
-
-body[data-theme="dark"] section,
-body[data-theme="dark"] .stat-card,
-body[data-theme="dark"] .achievement-card,
-body[data-theme="dark"] .analytics-card,
-body[data-theme="dark"] .subject-card,
-body[data-theme="dark"] .insight-card,
-body[data-theme="dark"] .timetable-summary-card,
-body[data-theme="dark"] .timetable-session-card,
-body[data-theme="dark"] .exam-tracker-list article,
-body[data-theme="dark"] .badge-card,
-body[data-theme="dark"] .calendar-selected-day,
-body[data-theme="dark"] .upcoming-deadlines,
-body[data-theme="dark"] .goal-progress,
-body[data-theme="dark"] .weekly-chart-section {
-    background-color: #24203e;
-    color: #f3f0ff;
-    border-color: #494263;
-}
-
-body[data-theme="dark"] h1,
-body[data-theme="dark"] h2,
-body[data-theme="dark"] h3,
-body[data-theme="dark"] h4,
-body[data-theme="dark"] p,
-body[data-theme="dark"] label,
-body[data-theme="dark"] span,
-body[data-theme="dark"] small {
-    color: inherit;
-}
-
-body[data-theme="dark"] input,
-body[data-theme="dark"] select,
-body[data-theme="dark"] textarea {
-    background-color: #302b4c;
-    color: #ffffff;
-    border-color: #625982;
-}
-
-body[data-theme="dark"] input::placeholder,
-body[data-theme="dark"] textarea::placeholder {
-    color: #c0b9d7;
-}
-
-body[data-theme="dark"] button {
-    border-color: #625982;
-}
-
-body[data-theme="dark"] .calendar-day,
-body[data-theme="dark"] .calendar-day-empty {
-    background-color: #302b4c;
-    color: #ffffff;
-}
-
-body[data-theme="dark"] .calendar-day:hover,
-body[data-theme="dark"] .calendar-day.selected {
-    background-color: #514580;
-    color: #ffffff;
-}
-
-body[data-theme="dark"] .timer-section {
-    background-color: #24203e;
-    color: #ffffff;
-    border-color: #625982;
-}
-
-body[data-theme="dark"] .student-name-dialog {
-    background-color: #24203e;
-    color: #ffffff;
-}
-
-/* Lavender theme */
-body[data-theme="lavender"] {
-    background: #f1eaff;
-    color: #30244b;
-}
-
-body[data-theme="lavender"] .container {
-    color: #30244b;
-}
-
-body[data-theme="lavender"] section,
-body[data-theme="lavender"] .stat-card,
-body[data-theme="lavender"] .achievement-card,
-body[data-theme="lavender"] .analytics-card,
-body[data-theme="lavender"] .subject-card,
-body[data-theme="lavender"] .insight-card,
-body[data-theme="lavender"] .timetable-summary-card,
-body[data-theme="lavender"] .timetable-session-card,
-body[data-theme="lavender"] .badge-card,
-body[data-theme="lavender"] .calendar-selected-day,
-body[data-theme="lavender"] .upcoming-deadlines,
-body[data-theme="lavender"] .goal-progress,
-body[data-theme="lavender"] .weekly-chart-section {
-    background-color: #fcf9ff;
-    color: #30244b;
-    border-color: #d7c5f2;
-}
-
-body[data-theme="lavender"] input,
-body[data-theme="lavender"] select,
-body[data-theme="lavender"] textarea {
-    background-color: #ffffff;
-    color: #30244b;
-    border-color: #cbb6ec;
-}
-
-body[data-theme="lavender"] .calendar-day {
-    background-color: #eee4ff;
-    color: #30244b;
-}
-
-body[data-theme="lavender"] .calendar-day:hover,
-body[data-theme="lavender"] .calendar-day.selected {
-    background-color: #d8c2ff;
-    color: #30244b;
-}
-
-/* Keep theme selector usable on small screens */
-@media (max-width: 600px) {
-    .theme-control {
-        width: 100%;
-    }
-
-    .theme-control select {
-        max-width: 100%;
-    }
-}
-
-/* =====================================
-   SETTINGS PANEL
-===================================== */
-
-#openSettingsButton {
-    margin-top: 14px;
-    background: rgba(255, 255, 255, 0.18);
-    color: white;
-    border: 1px solid rgba(255, 255, 255, 0.45);
-}
-
-#openSettingsButton:hover {
-    background: rgba(255, 255, 255, 0.3);
-}
-
-.settings-panel {
-    width: min(900px, 94%);
+/* Smart Study Planner */
+.smart-planner-section {
+    max-width: 1000px;
     margin: 30px auto;
     padding: 28px;
-    background: var(--surface, #ffffff);
-    color: var(--text, #20243a);
-    border: 1px solid var(--border, #e0e5f5);
-    border-radius: 18px;
-    box-shadow: 0 8px 24px rgba(47, 55, 100, 0.08);
+    background: var(--card-background, #ffffff);
+    border: 1px solid #e8e5f5;
+    border-radius: 20px;
+    box-shadow: 0 8px 28px rgba(65, 50, 120, 0.08);
+    color: var(--text-color, #292641);
 }
-
-.settings-panel[hidden] {
-    display: none !important;
+.smart-planner-heading { margin-bottom: 24px; }
+.smart-planner-heading h2 { margin: 0 0 8px; font-size: 26px; color: #6655dc; }
+.smart-planner-heading p { margin: 0; color: #77738b; font-size: 15px; line-height: 1.6; }
+#smartPlannerForm { display: flex; flex-direction: column; gap: 20px; }
+.planner-field { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.planner-field label { font-weight: 600; font-size: 14px; }
+.planner-field input, .planner-field textarea, .planner-field select {
+    width: 100%; padding: 12px 14px; border: 1px solid #dcd8ec; border-radius: 10px;
+    background: #fbfaff; color: #292641; font: inherit; font-size: 14px; box-sizing: border-box;
 }
-
-.settings-heading {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 12px;
-    padding-bottom: 18px;
-    border-bottom: 1px solid var(--border, #e0e5f5);
+.planner-field textarea { resize: vertical; min-height: 80px; }
+.planner-field input:focus, .planner-field textarea:focus, .planner-field select:focus {
+    outline: none; border-color: #6655dc; box-shadow: 0 0 0 3px rgba(102, 85, 220, 0.12);
 }
-
-.settings-group {
-    margin-top: 24px;
-    padding: 20px;
-    border: 1px solid var(--border, #e0e5f5);
-    border-radius: 14px;
+.planner-field small { color: #858097; font-size: 12px; line-height: 1.5; }
+.planner-fields-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+#generateStudyPlanButton, #saveStudyPlanButton, #regenerateStudyPlanButton {
+    padding: 12px 18px; border: none; border-radius: 10px; background: #6655dc; color: white;
+    font-size: 14px; font-weight: 600; cursor: pointer; transition: background .2s ease, transform .2s ease;
 }
-
-.settings-group h3 {
-    margin-bottom: 8px;
+#generateStudyPlanButton { align-self: flex-start; }
+#generateStudyPlanButton:hover, #saveStudyPlanButton:hover, #regenerateStudyPlanButton:hover {
+    background: #5140c4; transform: translateY(-1px);
 }
-
-.settings-group p {
-    margin-bottom: 16px;
-}
-
-.settings-group label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: 600;
-}
-
-.settings-group select {
-    width: 100%;
-    max-width: 350px;
-}
-
+#plannerMessage { margin: 0; color: #b54747; font-size: 14px; }
+.planner-results { margin-top: 28px; padding-top: 24px; border-top: 1px solid #ece9f6; }
+.planner-results h3 { margin-top: 0; }
+.planner-summary { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 18px 0; }
+.planner-summary p { margin: 0; padding: 14px; background: #f4f1ff; border-radius: 12px; font-size: 13px; line-height: 1.6; }
+#plannerScheduleList { display: flex; flex-direction: column; gap: 12px; margin: 18px 0; }
+.planner-session { padding: 16px; background: #fbfaff; border: 1px solid #e8e5f5; border-left: 4px solid #6655dc; border-radius: 12px; }
+.planner-session h4 { margin: 0 0 6px; }
+.planner-session p { margin: 4px 0; color: #77738b; font-size: 13px; }
+#saveStudyPlanButton, #regenerateStudyPlanButton { margin: 4px 8px 4px 0; }
 @media (max-width: 600px) {
-    .settings-panel {
-        padding: 18px;
-    }
-
-    .settings-group {
-        padding: 14px;
-    }
+    .smart-planner-section { margin: 18px 10px; padding: 18px; }
+    .smart-planner-heading h2 { font-size: 22px; }
+    .planner-fields-grid, .planner-summary { grid-template-columns: 1fr; }
+    #generateStudyPlanButton, #saveStudyPlanButton, #regenerateStudyPlanButton { width: 100%; margin: 4px 0; }
 }
-

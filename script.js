@@ -2043,83 +2043,267 @@ if (examForm) {
 }
 populateExamSubjects();
 renderExamTracker();
-
-
+ 
+ 
 /* ==========================================
    DARK MODE AND THEMES
 ========================================== */
-
+ 
 const themeSelector = document.getElementById("themeSelector");
 const THEME_STORAGE_KEY = "studyTrackerTheme";
-
+ 
 function applyStudyTheme(theme) {
     const availableThemes = ["light", "dark", "lavender"];
-
+ 
     if (!availableThemes.includes(theme)) {
         theme = "light";
     }
-
+ 
     document.body.dataset.theme = theme;
-
+ 
     if (themeSelector) {
         themeSelector.value = theme;
     }
-
+ 
     localStorage.setItem(THEME_STORAGE_KEY, theme);
-
+ 
     const themeColors = {
         light: "#f8f7ff",
         dark: "#17152b",
         lavender: "#f1eaff"
     };
-
+ 
     const themeColor = themeColors[theme];
-
+ 
     let themeMeta = document.querySelector('meta[name="theme-color"]');
-
+ 
     if (themeMeta) {
         themeMeta.setAttribute("content", themeColor);
     }
 }
-
+ 
 if (themeSelector) {
     const savedTheme = localStorage.getItem(THEME_STORAGE_KEY) || "light";
-
+ 
     applyStudyTheme(savedTheme);
-
+ 
     themeSelector.addEventListener("change", function () {
         applyStudyTheme(themeSelector.value);
     });
 }
-
+ 
 /* =====================================
    SETTINGS PANEL CONTROLS
 ===================================== */
-
+ 
 const openSettingsButton = document.getElementById("openSettingsButton");
 const closeSettingsButton = document.getElementById("closeSettingsButton");
 const settingsPanel = document.getElementById("settingsPanel");
 const mainContainer = document.querySelector(".container");
-
+ 
 if (openSettingsButton && closeSettingsButton && settingsPanel && mainContainer) {
-
+ 
     openSettingsButton.addEventListener("click", function () {
         mainContainer.hidden = true;
         settingsPanel.hidden = false;
         window.scrollTo(0, 0);
     });
-
+ 
     closeSettingsButton.addEventListener("click", function () {
         settingsPanel.hidden = true;
         mainContainer.hidden = false;
         window.scrollTo(0, 0);
     });
-
+ 
 }
-
  
  
-
  
-
-
+ 
+ 
+ 
+ 
+ 
+ 
+/* ==========================================
+   SMART STUDY PLANNER
+========================================== */
+(function setupSmartStudyPlanner() {
+    const form = document.getElementById("smartPlannerForm");
+    if (!form) return;
+ 
+    const subjectsInput = document.getElementById("plannerSubjects");
+    const topicsInput = document.getElementById("plannerTopics");
+    const hoursInput = document.getElementById("plannerAvailableHours");
+    const startInput = document.getElementById("plannerStartTime");
+    const sessionLengthInput = document.getElementById("plannerSessionLength");
+    const breakLengthInput = document.getElementById("plannerBreakLength");
+    const message = document.getElementById("plannerMessage");
+    const results = document.getElementById("plannerResults");
+    const scheduleList = document.getElementById("plannerScheduleList");
+    const sessionCount = document.getElementById("plannerSessionCount");
+    const studyTotal = document.getElementById("plannerStudyTotal");
+    const breakTotal = document.getElementById("plannerBreakTotal");
+    const saveButton = document.getElementById("saveStudyPlanButton");
+    const regenerateButton = document.getElementById("regenerateStudyPlanButton");
+ 
+    let generatedSessions = [];
+ 
+    function minutesToTime(totalMinutes) {
+        const normalized = ((totalMinutes % 1440) + 1440) % 1440;
+        return String(Math.floor(normalized / 60)).padStart(2, "0") + ":" +
+            String(normalized % 60).padStart(2, "0");
+    }
+ 
+    function displayTime(time) {
+        const parts = time.split(":").map(Number);
+        const date = new Date();
+        date.setHours(parts[0], parts[1], 0, 0);
+        return date.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
+    }
+ 
+    function generatePlan() {
+        message.textContent = "";
+        const subjects = subjectsInput.value.split(",").map(value => value.trim()).filter(Boolean);
+        const topics = topicsInput.value.split(",").map(value => value.trim());
+        const hours = Number(hoursInput.value);
+        const start = startInput.value;
+        const sessionLength = Number(sessionLengthInput.value);
+        const breakLength = Number(breakLengthInput.value);
+ 
+        if (!subjects.length) {
+            message.textContent = "Enter at least one subject.";
+            return;
+        }
+        if (!Number.isFinite(hours) || hours < 0.5 || hours > 16) {
+            message.textContent = "Choose available study time between 0.5 and 16 hours.";
+            return;
+        }
+        if (!start) {
+            message.textContent = "Choose a start time.";
+            return;
+        }
+ 
+        const availableMinutes = Math.round(hours * 60);
+        const count = Math.max(1, Math.floor((availableMinutes + breakLength) / (sessionLength + breakLength)));
+        generatedSessions = [];
+        let cursor = Number(start.split(":")[0]) * 60 + Number(start.split(":")[1]);
+        let studyMinutesUsed = 0;
+ 
+        for (let i = 0; i < count && studyMinutesUsed < availableMinutes; i++) {
+            const duration = Math.min(sessionLength, availableMinutes - studyMinutesUsed);
+            if (duration <= 0) break;
+            const subject = subjects[i % subjects.length];
+            const topic = topics[i % subjects.length] || "";
+            const sessionStart = cursor;
+            const sessionEnd = cursor + duration;
+ 
+            generatedSessions.push({
+                subject,
+                topic: topic || "Review concepts and practise questions",
+                startTime: minutesToTime(sessionStart),
+                endTime: minutesToTime(sessionEnd),
+                duration,
+                breakAfter: i < count - 1 ? breakLength : 0
+            });
+ 
+            studyMinutesUsed += duration;
+            cursor = sessionEnd + (i < count - 1 ? breakLength : 0);
+        }
+ 
+        renderPlan(studyMinutesUsed);
+    }
+ 
+    function renderPlan(studyMinutesUsed) {
+        scheduleList.innerHTML = "";
+        let totalBreak = 0;
+        generatedSessions.forEach((session, index) => {
+            totalBreak += session.breakAfter;
+            const card = document.createElement("article");
+            card.className = "planner-session";
+ 
+            const heading = document.createElement("h4");
+            heading.textContent = `Session ${index + 1}: ${session.subject}`;
+            const time = document.createElement("p");
+            time.textContent = `${displayTime(session.startTime)} – ${displayTime(session.endTime)} · ${session.duration} minutes`;
+            const topic = document.createElement("p");
+            topic.textContent = `Topic: ${session.topic}`;
+            card.append(heading, time, topic);
+            if (session.breakAfter) {
+                const breakText = document.createElement("p");
+                breakText.textContent = `Break after this session: ${session.breakAfter} minutes`;
+                card.appendChild(breakText);
+            }
+            scheduleList.appendChild(card);
+        });
+ 
+        sessionCount.textContent = generatedSessions.length;
+        studyTotal.textContent = studyMinutesUsed + " min";
+        breakTotal.textContent = totalBreak + " min";
+        results.hidden = false;
+    }
+ 
+    form.addEventListener("submit", function (event) {
+        event.preventDefault();
+        generatePlan();
+    });
+ 
+    if (regenerateButton) {
+        regenerateButton.addEventListener("click", generatePlan);
+    }
+ 
+    if (saveButton) {
+        saveButton.addEventListener("click", function () {
+            if (!generatedSessions.length) {
+                message.textContent = "Generate a study plan first.";
+                return;
+            }
+            const dateKey = typeof todayKey === "function"
+                ? todayKey()
+                : new Date().toISOString().slice(0, 10);
+ 
+            // Check all planned sessions for overlap before saving any of them.
+            const existing = Array.isArray(timetableSessions)
+                ? timetableSessions.filter(session => session.date === dateKey)
+                : [];
+            const overlaps = generatedSessions.some(planned => {
+                const start = planned.startTime.split(":").reduce((h, m) => Number(h) * 60 + Number(m));
+                const end = planned.endTime.split(":").reduce((h, m) => Number(h) * 60 + Number(m));
+                return existing.some(session => {
+                    const oldStart = timeToMinutes(session.startTime);
+                    const oldEnd = timeToMinutes(session.endTime);
+                    return start < oldEnd && end > oldStart;
+                });
+            });
+ 
+            if (overlaps) {
+                message.textContent = "Some generated sessions overlap with your existing timetable. Change the start time or remove conflicting sessions first.";
+                return;
+            }
+ 
+            generatedSessions.forEach(session => {
+                timetableSessions.push({
+                    id: "planner-" + Date.now() + "-" + Math.random().toString(36).slice(2, 8),
+                    date: dateKey,
+                    subject: session.subject,
+                    topic: session.topic,
+                    startTime: session.startTime,
+                    endTime: session.endTime,
+                    completed: false,
+                    completedAt: null,
+                    createdAt: dateKey
+                });
+            });
+ 
+            if (typeof saveTimetableSessions === "function") saveTimetableSessions();
+            if (typeof renderTimetable === "function") {
+                timetableSelectedDate = dateKey;
+                renderTimetable();
+            }
+            message.style.color = "#237a45";
+            message.textContent = "Study plan added to today's timetable!";
+            saveButton.disabled = true;
+            saveButton.textContent = "Added to Timetable";
+        });
+    }
+})();
